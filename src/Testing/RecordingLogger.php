@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Testing;
 
-use Tavaan\Core\Contracts\Log\LoggerInterface;
-use Tavaan\Core\Contracts\Log\LogLevel;
+use Tavaan\Engine\Log\Contracts\LoggerInterface;
+use Tavaan\Engine\Log\Contracts\LogLevel;
 
 /**
  * تَوان | Tavaan — Database

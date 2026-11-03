@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database;
 
-use Tavaan\Core\Contracts\Database\TransactionManagerInterface;
+use Tavaan\Engine\Database\Contracts\TransactionManagerInterface;
 use Tavaan\Core\Contracts\Events\DispatcherInterface;
 use Tavaan\Engine\Database\Exceptions\DeadlockException;
 use Tavaan\Engine\Database\Exceptions\QueryException;

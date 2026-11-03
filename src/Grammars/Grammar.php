@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Grammars;
 
-use Tavaan\Core\Contracts\Database\GrammarInterface;
+use Tavaan\Engine\Database\Contracts\GrammarInterface;
 use Tavaan\Engine\Database\Exceptions\UnsafeQueryException;
 use Tavaan\Engine\Database\Expression;
 

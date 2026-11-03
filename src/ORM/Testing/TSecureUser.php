@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\ORM\Testing;
 
-use Tavaan\Core\Contracts\Auth\Authenticatable;
+use Tavaan\Engine\Auth\Contracts\Authenticatable;
 use Tavaan\Engine\Database\ORM\Model;
 
 /**

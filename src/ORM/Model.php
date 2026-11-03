@@ -6,7 +6,7 @@ namespace Tavaan\Engine\Database\ORM;
 
 use Tavaan\Core\Contracts\Container\ContainerInterface;
 use Tavaan\Core\Contracts\Events\DispatcherInterface;
-use Tavaan\Core\Contracts\ORM\ModelInterface;
+use Tavaan\Engine\Database\ORM\Contracts\ModelInterface;
 use Tavaan\Engine\Database\Connection;
 use Tavaan\Engine\Database\ConnectionManager;
 use Tavaan\Engine\Database\ORM\Casts\CastHandler;
@@ -128,7 +128,7 @@ abstract class Model implements ModelInterface
     /** @var array<class-string, list<object>> */
     private static array $observers = [];
 
-    /** @var array<class-string, list<\Tavaan\Core\Contracts\ORM\ScopeInterface>> */
+    /** @var array<class-string, list<\Tavaan\Engine\Database\ORM\Contracts\ScopeInterface>> */
     private static array $globalScopes = [];
 
     private static bool $unguarded = false;
@@ -211,7 +211,7 @@ abstract class Model implements ModelInterface
     {
     }
 
-    public static function addGlobalScope(\Tavaan\Core\Contracts\ORM\ScopeInterface $scope): void
+    public static function addGlobalScope(\Tavaan\Engine\Database\ORM\Contracts\ScopeInterface $scope): void
     {
         self::$globalScopes[static::class][] = $scope;
     }

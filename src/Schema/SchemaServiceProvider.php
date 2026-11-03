@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tavaan\Engine\Database\Schema;
 
 use Tavaan\Core\Contracts\Container\ContainerInterface;
-use Tavaan\Core\Contracts\Database\SchemaBuilderInterface;
+use Tavaan\Engine\Database\Contracts\SchemaBuilderInterface;
 use Tavaan\Core\Provider\ServiceProvider;
 use Tavaan\Engine\Database\ConnectionManager;
 

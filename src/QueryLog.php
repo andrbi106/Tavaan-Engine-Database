@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database;
 
-use Tavaan\Core\Contracts\Log\LoggerInterface;
+use Tavaan\Engine\Log\Contracts\LoggerInterface;
 use Tavaan\Core\Error\LogMasker;
 
 /**

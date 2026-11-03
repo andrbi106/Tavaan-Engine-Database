@@ -1,100 +1,105 @@
-# Database
+# Tavaan Engine — Database
 
-> لایه داده با Connection (PDO)، Query Builder، Transaction با Savepoint و Query Log.
+> **دیتابیس** — موتور Database در فریمورک تَوان
+
+## مشخصات
 
 | فیلد | مقدار |
-|------|------|
-| Engine ID | `tavaan.engine.database` |
-| DOC-ID | `DOC-047` |
-| Namespace | `Tavaan\Engine\Database` |
-| اولویت | P0 (فاز M3) |
+|---|---|
+| شناسه | `tavaan.engine.database` |
+| نام | `Database` |
+| عنوان فارسی | دیتابیس |
+| نسخه | `0.1.0` |
+| namespace | `Tavaan\Engine\Database` |
+| نوع | `engine` |
 | Facade | `DB` (accessor: `db`) |
-| مخزن | https://github.com/andrbi106/Tavaan-Engine-Database |
-| مستندات | https://github.com/Derogaramin/Tavaan-Doc/blob/main/docs/03-engines/database.md |
 
-## استفاده
+## قراردادها (Contracts)
 
-```php
-use Tavaan\Engine\Database\ConnectionManager;
-use Tavaan\Engine\Database\Connection;
-use Tavaan\Engine\Database\Query\QueryBuilder;
+این موتور قراردادهای زیر را ارائه می‌دهد:
 
-// Connection Manager
-$m = new ConnectionManager([
-    'default' => 'default',
-    'connections' => [
-        'default' => ['driver' => 'mysql', 'host' => '127.0.0.1', 'database' => 'app'],
-        'sqlite'  => ['driver' => 'sqlite', 'database' => ':memory:'],
-    ],
-]);
-$db = $m->connection();
-$db = $m->connection('sqlite');
+- `Tavaan\Engine\Database\Contracts\ConnectionInterface`
+- `Tavaan\Engine\Database\Contracts\GrammarInterface`
+- `Tavaan\Engine\Database\Contracts\MigrationInterface`
+- `Tavaan\Engine\Database\Contracts\PaginatorInterface`
+- `Tavaan\Engine\Database\Contracts\QueryBuilderInterface`
+- `Tavaan\Engine\Database\Contracts\SchemaBuilderInterface`
+- `Tavaan\Engine\Database\Contracts\TransactionManagerInterface`
 
-// Direct Connection
-$conn = new Connection('sqlite::memory:');
+## خطاها (Exceptions)
 
-// Raw queries
-$conn->exec('CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)');
-$id = $conn->insert('INSERT INTO users (name, age) VALUES (?, ?)', ['Ali', 25]);
-$rows = $conn->select('SELECT * FROM users WHERE age > ?', [20]);
-$row = $conn->selectOne('SELECT * FROM users WHERE id = ?', [$id]);
-$affected = $conn->update('UPDATE users SET age = ? WHERE id = ?', [26, $id]);
-$deleted = $conn->delete('DELETE FROM users WHERE id = ?', [$id]);
+- `Tavaan\Engine\Database\Exceptions\ConnectionException`
+- `Tavaan\Engine\Database\Exceptions\DatabaseException`
+- `Tavaan\Engine\Database\Exceptions\DeadlockException`
+- `Tavaan\Engine\Database\Exceptions\MixedBindingException`
+- `Tavaan\Engine\Database\Exceptions\QueryException`
+- `Tavaan\Engine\Database\Exceptions\RecordNotFoundException`
+- `Tavaan\Engine\Database\Exceptions\UnsafeQueryException`
 
-// Query Builder
-$qb = new QueryBuilder($conn, 'users');
-$rows = $qb->select(['id', 'name'])->where('age', '>', 20)->orderBy('id', 'DESC')->limit(10)->get();
-$first = $qb->first();
-$count = $qb->count();
-$exists = $qb->where('name', 'Ali')->exists();
-$id = (new QueryBuilder($conn, 'users'))->insert(['name' => 'Sara', 'age' => 30]);
-$affected = (new QueryBuilder($conn, 'users'))->where('id', $id)->update(['age' => 31]);
-$deleted = (new QueryBuilder($conn, 'users'))->where('id', $id)->delete();
+## Facadeها
 
-// Or with shorthand
-$qb->whereIn('id', [1, 2, 3])
-   ->whereNull('deleted_at')
-   ->orWhere('status', 'active')
-   ->orderBy('created_at', 'DESC')
-   ->take(20)
-   ->skip(40);
+- `Tavaan\Engine\Database\Facades\DB`
+- `Tavaan\Engine\Database\Facades\Schema`
 
-// Transactions
-$conn->beginTransaction();
-try {
-    $conn->insert('INSERT INTO ...', [...]);
-    $conn->beginTransaction();  // savepoint
-    try {
-        $conn->insert('INSERT INTO ...', [...]);
-        $conn->commit();
-    } catch (\Throwable) {
-        $conn->rollBack();  // rollback to savepoint
-    }
-    $conn->commit();
-} catch (\Throwable) {
-    $conn->rollBack();
-}
+## کلاس‌های اصلی
 
-// Closure transaction
-$conn->transaction(function ($c) {
-    $c->insert('INSERT ...', [...]);
-    $c->update('UPDATE ...', [...]);
-});
+- `src/Connection.php`
+- `src/ConnectionManager.php`
+- `src/Connections/MySqlConnection.php`
+- `src/Connections/PostgresConnection.php`
+- `src/Connections/SqliteConnection.php`
+- `src/DatabaseServiceProvider.php`
+- `src/Expression.php`
+- `src/Grammars/Grammar.php`
+- `src/Grammars/MySqlGrammar.php`
+- `src/Grammars/PostgresGrammar.php`
+- `src/Grammars/SqliteGrammar.php`
+- `src/Migration/Exceptions/MigrationException.php`
+- `src/Migration/Exceptions/MigrationLockedException.php`
+- `src/Migration/FileMigrationLock.php`
+- `src/Migration/MigrateResult.php`
+- `src/Migration/Migration.php`
+- `src/Migration/MigrationRepository.php`
+- `src/Migration/MigrationServiceProvider.php`
+- `src/Migration/Migrator.php`
+- `src/ORM/Casts/CastHandler.php`
+- ... و 56 فایل دیگر
 
-// Query Log
-$log = $conn->getQueryLog();
-$conn->flushQueryLog();
-```
+## Service Providerها
 
-## تست‌ها
+- `Tavaan\Engine\Database\DatabaseServiceProvider`
+
+## وابستگی‌ها
+
+**موتورهای مورد‌نیاز:**
+
+- `config`
+- `event`
+- `log`
+
+## پیکربندی
+
+- فایل پیکربندی: `config/database.php`
+- کلید: `database`
+
+## نصب
 
 ```bash
-php bin/tvn test engines/database
+git clone https://github.com/andrbi106/Tavaan-Engine-Database.git
 ```
 
-## مستندات
+این موتور بخشی از فریمورک تَوان است و معمولاً به‌صورت مستقیم نصب نمی‌شود،
+بلکه توسط [Tavaan-Core](https://github.com/andrbi106/Tavaan-Core) مدیریت می‌شود.
 
-سند کامل: [docs/03-engines/database.md](https://github.com/Derogaramin/Tavaan-Doc/blob/main/docs/03-engines/database.md)
+## روابط با سایر مخازن
 
----
-*Generated by Tavaan Engine Implementation Generator on 2026-11-03.*
+| مخزن | نقش |
+|---|---|
+| **`andrbi106/Tavaan-Engine-Database`** (این مخزن) | موتور Database |
+| `andrbi106/Tavaan-Engine-Core` | ساختار پایه + درگاه ارتباط موتورها |
+| `andrbi106/Tavaan-Core` | اسکلت اپلیکیشن + همهٔ موتورها |
+| `Derogaramin/Tavaan-Framework` | فریمورک مادر (monorepo) |
+
+## مجوز
+
+MIT — هم‌راستا با فریمورک مادر تَوان.

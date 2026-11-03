@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\ORM;
 
-use Tavaan\Core\Contracts\Database\PaginatorInterface;
+use Tavaan\Engine\Database\Contracts\PaginatorInterface;
 use Tavaan\Engine\Database\Exceptions\RecordNotFoundException;
 use Tavaan\Engine\Database\Pagination\Paginator;
 use Tavaan\Engine\Database\QueryBuilder;

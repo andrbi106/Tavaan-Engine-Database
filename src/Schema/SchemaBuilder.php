@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Schema;
 
-use Tavaan\Core\Contracts\Database\SchemaBuilderInterface;
+use Tavaan\Engine\Database\Contracts\SchemaBuilderInterface;
 use Tavaan\Engine\Database\Connection;
 use Tavaan\Engine\Database\ConnectionManager;
 use Tavaan\Engine\Database\Schema\Grammars\MySqlSchemaGrammar;

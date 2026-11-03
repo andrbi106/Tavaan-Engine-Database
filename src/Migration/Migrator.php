@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Migration;
 
-use Tavaan\Core\Contracts\Database\MigrationInterface;
+use Tavaan\Engine\Database\Contracts\MigrationInterface;
 use Tavaan\Engine\Database\Connection;
 use Tavaan\Engine\Database\Migration\Exceptions\MigrationException;
 use Tavaan\Engine\Database\Migration\Exceptions\MigrationLockedException;

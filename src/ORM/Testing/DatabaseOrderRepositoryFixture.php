@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\ORM\Testing;
 
-use Tavaan\Core\Contracts\Database\ConnectionInterface;
-use Tavaan\Core\Contracts\ORM\RepositoryInterface;
+use Tavaan\Engine\Database\Contracts\ConnectionInterface;
+use Tavaan\Engine\Database\ORM\Contracts\RepositoryInterface;
 
 /**
  * Fixture تست ORM — پیاده‌سازی Repository روی ConnectionInterface (DOC-050 §7).

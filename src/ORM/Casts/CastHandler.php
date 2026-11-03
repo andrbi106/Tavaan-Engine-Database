@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\ORM\Casts;
 
-use Tavaan\Core\Contracts\ORM\CastInterface;
+use Tavaan\Engine\Database\ORM\Contracts\CastInterface;
 use Tavaan\Engine\Compat\Decimal;
 use Tavaan\Engine\Database\ORM\Model;
 use Tavaan\Engine\Database\ORM\Support\Money;

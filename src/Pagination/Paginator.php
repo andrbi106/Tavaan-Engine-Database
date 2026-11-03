@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Pagination;
 
-use Tavaan\Core\Contracts\Database\PaginatorInterface;
+use Tavaan\Engine\Database\Contracts\PaginatorInterface;
 
 /**
  * تَوان | Tavaan — Database

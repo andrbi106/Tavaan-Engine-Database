@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database\Migration;
 
-use Tavaan\Core\Contracts\Cache\LockInterface;
+use Tavaan\Engine\Cache\Contracts\LockInterface;
 
 /**
  * تَوان | Tavaan — Migration
