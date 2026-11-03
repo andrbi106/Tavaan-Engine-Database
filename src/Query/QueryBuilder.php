@@ -239,6 +239,13 @@ final class QueryBuilder
                 $placeholders = \array_fill(0, \count($where['value']), '?');
                 $sql .= "{$where['column']} IN (" . \implode(', ', $placeholders) . ')';
                 foreach ($where['value'] as $v) $bindings[] = $v;
+            } elseif ($where['operator'] === 'BETWEEN') {
+                $sql .= "{$where['column']} BETWEEN ? AND ?";
+                $bindings[] = $where['value'][0];
+                $bindings[] = $where['value'][1];
+            } elseif ($where['operator'] === 'RAW') {
+                $sql .= $where['column'];
+                foreach ($where['value'] as $v) $bindings[] = $v;
             } elseif ($where['operator'] === 'IS NULL' || $where['operator'] === 'IS NOT NULL') {
                 $sql .= "{$where['column']} {$where['operator']}";
             } else {
