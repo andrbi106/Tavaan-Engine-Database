@@ -1,36 +1,21 @@
 <?php
-
 declare(strict_types=1);
-
-/*|--------------------------------------------------------------------------
- | Database Engine Configuration
- |--------------------------------------------------------------------------
- |
- | پیکربندی موتور database — همهٔ کلیدهای مستندشده در `docs/03-engines/database.md` بخش «پیکربندی».
- |
- |@see https://github.com/Derogaramin/Tavaan-Doc/blob/main/docs/03-engines/database.md
- */
-
 return [
-    /*| پیش‌فرض موتور (driver/store یا حالت فعال) */
-    'default' => env('DATABASE_DEFAULT', 'default'),
-
-    /*| کلید کش (در صورت استفاده) */
-    'prefix' => env('DATABASE_PREFIX', 'database:'),
-
-    /*| تنظیمات لاگ */
-    'log' => [
-        'channel' => env('DATABASE_LOG_CHANNEL', 'database'),
+    'default' => \getenv('TVN_DB_CONNECTION') !== false ? \getenv('TVN_DB_CONNECTION') : 'default',
+    'connections' => [
+        'default' => [
+            'driver' => \getenv('TVN_DB_DRIVER') !== false ? \getenv('TVN_DB_DRIVER') : 'sqlite',
+            'database' => \getenv('TVN_DB_DATABASE') !== false ? \getenv('TVN_DB_DATABASE') : ':memory:',
+            'host' => \getenv('TVN_DB_HOST') !== false ? \getenv('TVN_DB_HOST') : '127.0.0.1',
+            'port' => (int) (\getenv('TVN_DB_PORT') !== false ? \getenv('TVN_DB_PORT') : 3306),
+            'username' => \getenv('TVN_DB_USERNAME') !== false ? \getenv('TVN_DB_USERNAME') : null,
+            'password' => \getenv('TVN_DB_PASSWORD') !== false ? \getenv('TVN_DB_PASSWORD') : null,
+            'charset' => 'utf8mb4',
+        ],
     ],
-
-    /*| Facade */
-    'facade' => [
-        'name' => 'DB',
-        'accessor' => 'db',
+    'query_log' => [
+        'enabled' => \getenv('TVN_DB_LOG') !== false ? \filter_var(\getenv('TVN_DB_LOG'), \FILTER_VALIDATE_BOOL) : false,
+        'slow_threshold' => (float) (\getenv('TVN_DB_SLOW') !== false ? \getenv('TVN_DB_SLOW') : 1.0),
     ],
-
-    /*| سایر کلیدها (طبق مستندات) */
-    'options' => [
-        // TODO: کلیدهای اضافی طبق سند §۶ (پیکربندی)
-    ],
+    'read_write_split' => false,
 ];

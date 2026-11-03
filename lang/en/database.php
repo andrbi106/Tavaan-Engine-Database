@@ -1,10 +1,1 @@
-<?php
-
-declare(strict_types=1);
-
-/*| پیام‌های en برای موتور database */
-
-return [
-    'error_default' => 'Unknown error (database)',
-    'not_configured' => 'Engine not configured (database)',
-];
+<?php return ["error_connection" => "Database connection failed.", "error_query" => "Query execution failed."];

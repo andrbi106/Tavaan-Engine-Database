@@ -4,164 +4,204 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Database;
 
-use Tavaan\Core\Contracts\Config\RepositoryInterface as Config;
-
 /**
- * Connection — پیاده‌سازی اصلی موتور.
+ * Connection — اتصال PDO با Query Log و Transaction Manager.
  *
- * @see \Tavaan\Engine\Database\Contracts\ConnectionInterface
+ * @see docs/03-engines/database.md (DOC-047)
  */
-final class Connection implements Contracts\ConnectionInterface
+final class Connection
 {
+    private ?\PDO $pdo = null;
+    private int $transactionLevel = 0;
+
     /**
-     * @param Config $config پیکربندی موتور
+     * @var list<array{sql: string, bindings: array, time: float}>
      */
+    private array $queryLog = [];
+
     public function __construct(
-        private readonly Config $config,
+        private readonly string $dsn,
+        private readonly ?string $username = null,
+        private readonly ?string $password = null,
+        private readonly array $options = [],
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function select(/* ... */): mixed
+    public function getPdo(): \PDO
     {
-        // TODO: پیاده‌سازی select مطابق مستندات (سند §3 API).
-        return null;
+        if ($this->pdo === null) {
+            $defaultOptions = [
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                \PDO::ATTR_EMULATE_PREPARES => false,
+            ];
+            $this->pdo = new \PDO(
+                $this->dsn,
+                $this->username,
+                $this->password,
+                \array_merge($defaultOptions, $this->options)
+            );
+        }
+        return $this->pdo;
     }
 
     /**
-     * {@inheritdoc}
+     * اجرای یک query با bindings.
+     *
+     * @param string $sql
+     * @param array<int, mixed> $bindings
+     * @return \PDOStatement
      */
-    public function selectOne(/* ... */): mixed
+    public function statement(string $sql, array $bindings = []): \PDOStatement
     {
-        // TODO: پیاده‌سازی selectOne مطابق مستندات (سند §3 API).
-        return null;
+        $start = \microtime(true);
+        $stmt = $this->getPdo()->prepare($sql);
+        foreach ($bindings as $i => $value) {
+            $param = \is_int($i) ? $i + 1 : $i;
+            $type = match (\gettype($value)) {
+                'NULL' => \PDO::PARAM_NULL,
+                'boolean' => \PDO::PARAM_BOOL,
+                'integer' => \PDO::PARAM_INT,
+                'double' => \PDO::PARAM_STR,
+                'resource' => \PDO::PARAM_LOB,
+                default => \PDO::PARAM_STR,
+            };
+            $stmt->bindValue($param, $value, $type);
+        }
+        $stmt->execute();
+        $this->queryLog[] = [
+            'sql' => $sql,
+            'bindings' => $bindings,
+            'time' => (float) \microtime(true) - $start,
+        ];
+        return $stmt;
     }
 
     /**
-     * {@inheritdoc}
+     * Select (returns array).
+     *
+     * @return list<array<string, mixed>>
      */
-    public function cursor(/* ... */): mixed
+    public function select(string $sql, array $bindings = []): array
     {
-        // TODO: پیاده‌سازی cursor مطابق مستندات (سند §3 API).
-        return null;
+        $stmt = $this->statement($sql, $bindings);
+        return $stmt->fetchAll();
     }
 
     /**
-     * {@inheritdoc}
+     * Select first row.
+     *
+     * @return array<string, mixed>|null
      */
-    public function insert(/* ... */): mixed
+    public function selectOne(string $sql, array $bindings = []): ?array
     {
-        // TODO: پیاده‌سازی insert مطابق مستندات (سند §3 API).
-        return null;
+        $stmt = $this->statement($sql, $bindings);
+        $row = $stmt->fetch();
+        return $row === false ? null : $row;
+    }
+
+    public function insert(string $sql, array $bindings = []): int
+    {
+        $this->statement($sql, $bindings);
+        return (int) $this->getPdo()->lastInsertId();
+    }
+
+    public function update(string $sql, array $bindings = []): int
+    {
+        $stmt = $this->statement($sql, $bindings);
+        return $stmt->rowCount();
+    }
+
+    public function delete(string $sql, array $bindings = []): int
+    {
+        $stmt = $this->statement($sql, $bindings);
+        return $stmt->rowCount();
     }
 
     /**
-     * {@inheritdoc}
+     * اجرای query خالی (CREATE TABLE, ALTER, ...).
      */
-    public function update(/* ... */): mixed
+    public function exec(string $sql): int
     {
-        // TODO: پیاده‌سازی update مطابق مستندات (سند §3 API).
-        return null;
+        return (int) $this->getPdo()->exec($sql);
+    }
+
+    // === Transactions ===
+
+    public function beginTransaction(): bool
+    {
+        if ($this->transactionLevel === 0) {
+            $this->getPdo()->beginTransaction();
+            $this->transactionLevel = 1;
+        } else {
+            // Savepoint for nested transactions
+            $this->exec("SAVEPOINT sp{$this->transactionLevel}");
+            $this->transactionLevel++;
+        }
+        return true;
+    }
+
+    public function commit(): bool
+    {
+        if ($this->transactionLevel === 0) return false;
+        if ($this->transactionLevel === 1) {
+            $this->getPdo()->commit();
+            $this->transactionLevel = 0;
+        } else {
+            $this->transactionLevel--;
+            $this->exec("RELEASE SAVEPOINT sp{$this->transactionLevel}");
+        }
+        return true;
+    }
+
+    public function rollBack(): bool
+    {
+        if ($this->transactionLevel === 0) return false;
+        if ($this->transactionLevel === 1) {
+            $this->getPdo()->rollBack();
+            $this->transactionLevel = 0;
+        } else {
+            $this->transactionLevel--;
+            $this->exec("ROLLBACK TO SAVEPOINT sp{$this->transactionLevel}");
+        }
+        return true;
     }
 
     /**
-     * {@inheritdoc}
+     * @return mixed
      */
-    public function delete(/* ... */): mixed
+    public function transaction(callable $callback): mixed
     {
-        // TODO: پیاده‌سازی delete مطابق مستندات (سند §3 API).
-        return null;
+        $this->beginTransaction();
+        try {
+            $result = $callback($this);
+            $this->commit();
+            return $result;
+        } catch (\Throwable $e) {
+            $this->rollBack();
+            throw $e;
+        }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function statement(/* ... */): mixed
+    public function getTransactionLevel(): int
     {
-        // TODO: پیاده‌سازی statement مطابق مستندات (سند §3 API).
-        return null;
+        return $this->transactionLevel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function affectingStatement(/* ... */): mixed
+    // === Query Log ===
+
+    public function getQueryLog(): array
     {
-        // TODO: پیاده‌سازی affectingStatement مطابق مستندات (سند §3 API).
-        return null;
+        return $this->queryLog;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function lastInsertId(/* ... */): mixed
+    public function flushQueryLog(): void
     {
-        // TODO: پیاده‌سازی lastInsertId مطابق مستندات (سند §3 API).
-        return null;
+        $this->queryLog = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transaction(/* ... */): mixed
+    public function disconnect(): void
     {
-        // TODO: پیاده‌سازی transaction مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beginTransaction(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی beginTransaction مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function commit(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی commit مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rollBack(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی rollBack مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function transactionLevel(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی transactionLevel مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function pdo(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی pdo مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function queryLog(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی queryLog مطابق مستندات (سند §3 API).
-        return null;
+        $this->pdo = null;
     }
 }

@@ -2,7 +2,7 @@
   "id": "tavaan.engine.database",
   "type": "engine",
   "name": "Database",
-  "title_fa": "دیتابیس (اتصال و Query Builder)",
+  "title_fa": "دیتابیس",
   "version": "0.1.0",
   "namespace": "Tavaan\\Engine\\Database\\",
   "autoload": {
@@ -11,25 +11,12 @@
     }
   },
   "providers": [
-    "Tavaan\\Engine\\Database\\QueryBuilderServiceProvider"
+    "Tavaan\\Engine\\Database\\DatabaseServiceProvider"
   ],
   "requires": {
     "php": ">=8.2",
-    "engines": [
-      "config",
-      "event",
-      "log"
-    ],
-    "extensions": [
-      "pdo"
-    ]
-  },
-  "soft_requires": {
-    "extensions": [
-      "pdo_mysql",
-      "pdo_pgsql",
-      "pdo_sqlite"
-    ]
+    "engines": ["config", "event", "log"],
+    "extensions": ["pdo"]
   },
   "config": {
     "file": "config/database.php",
@@ -41,6 +28,5 @@
     "name": "DB",
     "accessor": "db"
   },
-  "docs": "docs/03-engines/database.md",
-  "notes": "M3 — Prepared Statement ۱۰۰٪، Grammar سه درایور، Savepoint، Read/Write Splitting، QueryLog + N+1."
+  "docs": "docs/03-engines/database.md"
 }
