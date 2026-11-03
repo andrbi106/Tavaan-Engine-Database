@@ -204,4 +204,53 @@ final class Connection
     {
         $this->pdo = null;
     }
+
+    /**
+     * affectingStatement
+     */
+    public function affectingStatement(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * cursor
+     */
+    public function cursor(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * lastInsertId
+     */
+    public function lastInsertId(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * pdo
+     */
+    public function pdo(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * queryLog
+     */
+    public function queryLog(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * transactionLevel
+     */
+    public function transactionLevel(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
 }
