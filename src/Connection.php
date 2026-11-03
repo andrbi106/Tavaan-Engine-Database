@@ -208,42 +208,42 @@ final class Connection
     /**
      * affectingStatement
      */
-    public function affectingStatement(/* ... */): mixed
+    public function affectingStatement()
     {
         return null;
     }
     /**
      * cursor
      */
-    public function cursor(/* ... */): mixed
+    public function cursor()
     {
-        return $this->get();
+        return null;
     }
     /**
      * lastInsertId
      */
-    public function lastInsertId(/* ... */): mixed
+    public function lastInsertId()
     {
         return null;
     }
     /**
      * pdo
      */
-    public function pdo(/* ... */): mixed
+    public function pdo()
     {
         return null;
     }
     /**
      * queryLog
      */
-    public function queryLog(/* ... */): mixed
+    public function queryLog()
     {
         return null;
     }
     /**
      * transactionLevel
      */
-    public function transactionLevel(/* ... */): mixed
+    public function transactionLevel()
     {
         return null;
     }

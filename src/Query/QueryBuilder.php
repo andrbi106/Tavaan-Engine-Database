@@ -246,211 +246,212 @@ final class QueryBuilder
     /**
      * avg
      */
-    public function avg(/* ... */): mixed
+    public function avg(string $column)
     {
-        return (float) ($this->connection->selectOne('SELECT COALESCE(AVG(' . $column . '), 0) AS aggregate FROM ' . $this->table . $this->compileWheres()[0], $this->compileWheres()[1])['aggregate'] ?? 0);
+        return null;
     }
     /**
      * chunk
      */
-    public function chunk(/* ... */): mixed
+    public function chunk(int $count, callable $callback): self
     {
-        $results = $this->skip(0)->take($count)->get(); while (count($results) > 0) { foreach ($results as $r) $callback($r); $results = $this->skip(0)->take($count)->get(); } return true;
+        return null;
+    } return true;
     }
     /**
      * crossJoin
      */
-    public function crossJoin(/* ... */): mixed
+    public function crossJoin()
     {
-        return $this;
+        return null;
     }
     /**
      * cursor
      */
-    public function cursor(/* ... */): mixed
+    public function cursor()
     {
-        return $this->get();
+        return null;
     }
     /**
      * decrement
      */
-    public function decrement(/* ... */): mixed
+    public function decrement(string $column, int $amount = 1): self
     {
-        $this->connection->update('UPDATE ' . $this->table . ' SET ' . $column . ' = ' . $column . ' - ?', [$amount]); return $this;
+        $this->setAttribute($column, ($this->getAttribute($column) ?? 0) - $amount); return $this;
     }
     /**
      * find
      */
-    public function find(/* ... */): mixed
+    public function find(mixed $id)
     {
-        return [];
+        return null;
     }
     /**
      * forUpdate
      */
-    public function forUpdate(/* ... */): mixed
+    public function forUpdate()
     {
         return null;
     }
     /**
      * getBindings
      */
-    public function getBindings(/* ... */): mixed
+    public function getBindings()
     {
-        return array_keys($this->bindings);
+        return $this->bindings ?? null;
     }
     /**
      * groupBy
      */
-    public function groupBy(/* ... */): mixed
+    public function groupBy(string $column): self
     {
         return $this;
     }
     /**
      * having
      */
-    public function having(/* ... */): mixed
+    public function having(string $column, mixed $operator, mixed $value): self
     {
         return $this;
     }
     /**
      * increment
      */
-    public function increment(/* ... */): mixed
+    public function increment(string $column, int $amount = 1): self
     {
-        $this->connection->update('UPDATE ' . $this->table . ' SET ' . $column . ' = ' . $column . ' + ?', [$amount]); return $this;
+        $this->setAttribute($column, ($this->getAttribute($column) ?? 0) + $amount); return $this;
     }
     /**
      * insertGetId
      */
-    public function insertGetId(/* ... */): mixed
+    public function insertGetId()
     {
-        return $this->connection->insert($sql, $bindings);
+        return null;
     }
     /**
      * insertOrIgnore
      */
-    public function insertOrIgnore(/* ... */): mixed
+    public function insertOrIgnore()
     {
-        return $this->connection->insert($sql, $bindings);
+        return null;
     }
     /**
      * lazy
      */
-    public function lazy(/* ... */): mixed
+    public function lazy()
     {
         return null;
     }
     /**
      * max
      */
-    public function max(/* ... */): mixed
+    public function max(string $column)
     {
-        return $this->connection->selectOne('SELECT MAX(' . $column . ') AS aggregate FROM ' . $this->table)['aggregate'] ?? null;
+        return null;
     }
     /**
      * min
      */
-    public function min(/* ... */): mixed
+    public function min(string $column)
     {
-        return $this->connection->selectOne('SELECT MIN(' . $column . ') AS aggregate FROM ' . $this->table)['aggregate'] ?? null;
+        return null;
     }
     /**
      * paginate
      */
-    public function paginate(/* ... */): mixed
+    public function paginate()
     {
-        return $this;
+        return null;
     }
     /**
      * pluck
      */
-    public function pluck(/* ... */): mixed
+    public function pluck(string $column, ?string $key = null)
     {
-        return array_column($this->get(), $column, $key ?? null);
+        return null;
     }
     /**
      * rightJoin
      */
-    public function rightJoin(/* ... */): mixed
+    public function rightJoin()
     {
-        return $this;
+        return null;
     }
     /**
      * selectRaw
      */
-    public function selectRaw(/* ... */): mixed
+    public function selectRaw()
     {
-        return [];
+        return null;
     }
     /**
      * sharedLock
      */
-    public function sharedLock(/* ... */): mixed
+    public function sharedLock(): self
     {
         return $this;
     }
     /**
      * sum
      */
-    public function sum(/* ... */): mixed
+    public function sum(string $column)
     {
-        return (float) ($this->connection->selectOne('SELECT COALESCE(SUM(' . $column . '), 0) AS aggregate FROM ' . $this->table . $this->compileWheres()[0], $this->compileWheres()[1])['aggregate'] ?? 0);
+        return null;
     }
     /**
      * truncate
      */
-    public function truncate(/* ... */): mixed
-    {
-        $this->connection->exec('DELETE FROM ' . $this->table); return $this;
-    }
-    /**
-     * union
-     */
-    public function union(/* ... */): mixed
+    public function truncate(): self
     {
         return $this;
     }
     /**
+     * union
+     */
+    public function union()
+    {
+        return null;
+    }
+    /**
      * upsert
      */
-    public function upsert(/* ... */): mixed
+    public function upsert()
     {
         return null;
     }
     /**
      * value
      */
-    public function value(/* ... */): mixed
+    public function value()
     {
         return null;
     }
     /**
      * whereBetween
      */
-    public function whereBetween(/* ... */): mixed
+    public function whereBetween()
     {
-        return $this;
+        return null;
     }
     /**
      * whereExists
      */
-    public function whereExists(/* ... */): mixed
+    public function whereExists()
     {
-        return $this;
+        return null;
     }
     /**
      * whereRaw
      */
-    public function whereRaw(/* ... */): mixed
+    public function whereRaw()
     {
-        return $this;
+        return null;
     }
     /**
      * withCte
      */
-    public function withCte(/* ... */): mixed
+    public function withCte()
     {
-        return null;
+        $clone = clone $this; return $clone;
     }
 }
