@@ -300,18 +300,23 @@ final class QueryBuilder
         $this->setAttribute($column, ($this->getAttribute($column) ?? 0) - $amount); return $this;
     }
     /**
-     * find
+     * find — fetch a single row by its primary key (defaults to `id`).
+     * @param mixed $id
+     * @param string $key
+     * @return array<string, mixed>|null
      */
-    public function find(mixed $id)
+    public function find(mixed $id, string $key = 'id'): ?array
     {
-        return null;
+        $results = $this->where($key, '=', $id)->limit(1)->get();
+        return $results[0] ?? null;
     }
     /**
-     * forUpdate
+     * forUpdate — mark the next SELECT to use SELECT ... FOR UPDATE (pessimistic row lock).
      */
-    public function forUpdate()
+    public function forUpdate(): self
     {
-        return null;
+        $this->lockForUpdate = true;
+        return $this;
     }
     /**
      * getBindings
