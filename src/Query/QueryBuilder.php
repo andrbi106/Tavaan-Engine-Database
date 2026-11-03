@@ -255,8 +255,7 @@ final class QueryBuilder
      */
     public function chunk(int $count, callable $callback): self
     {
-        return null;
-    } return true;
+        return $this;
     }
     /**
      * crossJoin
