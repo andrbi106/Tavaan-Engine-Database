@@ -283,15 +283,13 @@ final class QueryBuilder
      */
     public function find(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return [];
     }
     /**
      * forUpdate
      */
     public function forUpdate(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -341,7 +339,6 @@ final class QueryBuilder
      */
     public function lazy(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -363,8 +360,7 @@ final class QueryBuilder
      */
     public function paginate(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return $this;
     }
     /**
      * pluck
@@ -385,8 +381,7 @@ final class QueryBuilder
      */
     public function selectRaw(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return [];
     }
     /**
      * sharedLock
@@ -421,7 +416,6 @@ final class QueryBuilder
      */
     public function upsert(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -429,7 +423,6 @@ final class QueryBuilder
      */
     public function value(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -458,7 +451,6 @@ final class QueryBuilder
      */
     public function withCte(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
 }

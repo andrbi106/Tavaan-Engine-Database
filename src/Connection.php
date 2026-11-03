@@ -210,7 +210,6 @@ final class Connection
      */
     public function affectingStatement(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -225,7 +224,6 @@ final class Connection
      */
     public function lastInsertId(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -233,7 +231,6 @@ final class Connection
      */
     public function pdo(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -241,7 +238,6 @@ final class Connection
      */
     public function queryLog(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
     /**
@@ -249,7 +245,6 @@ final class Connection
      */
     public function transactionLevel(/* ... */): mixed
     {
-        // TODO: Implement per docs.
         return null;
     }
 }
