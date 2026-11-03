@@ -208,43 +208,46 @@ final class Connection
     /**
      * affectingStatement
      */
-    public function affectingStatement()
+    public function affectingStatement(string $sql, array $bindings = []): int
     {
-        return null;
+        return $this->exec($sql);
     }
     /**
      * cursor
      */
-    public function cursor()
+    public function cursor(string $sql, array $bindings = []): \Generator
     {
-        return null;
+        $stmt = $this->statement($sql, $bindings);
+        while ($row = $stmt->fetch()) {
+            yield $row;
+        }
     }
     /**
      * lastInsertId
      */
-    public function lastInsertId()
+    public function lastInsertId(?string $name = null): string
     {
-        return null;
+        return (string) $this->getPdo()->lastInsertId($name);
     }
     /**
      * pdo
      */
-    public function pdo()
+    public function pdo(): \PDO
     {
-        return null;
+        return $this->getPdo();
     }
     /**
      * queryLog
      */
-    public function queryLog()
+    public function queryLog(): array
     {
-        return null;
+        return $this->queryLog;
     }
     /**
      * transactionLevel
      */
-    public function transactionLevel()
+    public function transactionLevel(): int
     {
-        return null;
+        return $this->transactionLevel;
     }
 }

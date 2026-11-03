@@ -246,9 +246,11 @@ final class QueryBuilder
     /**
      * avg
      */
-    public function avg(string $column)
+    public function avg(string $column): float
     {
-        return null;
+        [$sql, $bindings] = $this->compileAggregate("AVG", $column);
+        $row = $this->connection->selectOne($sql, $bindings);
+        return (float) ($row["aggregate"] ?? 0);
     }
     /**
      * chunk
@@ -260,16 +262,21 @@ final class QueryBuilder
     /**
      * crossJoin
      */
-    public function crossJoin()
+    public function crossJoin(string $table): self
     {
-        return null;
+        $this->joinClauses[] = ["table" => $table, "type" => "CROSS", "local" => "", "foreign" => "", "operator" => ""];
+        return $this;
     }
     /**
      * cursor
      */
-    public function cursor()
+    public function cursor(): \Generator
     {
-        return null;
+        [$sql, $bindings] = $this->toSql();
+        $stmt = $this->connection->statement($sql, $bindings);
+        while ($row = $stmt->fetch()) {
+            yield $row;
+        }
     }
     /**
      * decrement
@@ -323,65 +330,101 @@ final class QueryBuilder
     /**
      * insertGetId
      */
-    public function insertGetId()
+    public function insertGetId(array $values): int
     {
-        return null;
+        $columns = array_keys($values);
+        $placeholders = array_fill(0, count($columns), "?");
+        $sql = "INSERT INTO {$this->table} (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        return (int) $this->connection->insert($sql, array_values($values));
     }
     /**
      * insertOrIgnore
      */
-    public function insertOrIgnore()
+    public function insertOrIgnore(array $values): int
     {
-        return null;
+        $columns = array_keys($values);
+        $placeholders = array_fill(0, count($columns), "?");
+        $sql = "INSERT OR IGNORE INTO {$this->table} (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        return $this->connection->update($sql, array_values($values));
     }
     /**
      * lazy
      */
-    public function lazy()
+    public function lazy(int $chunkSize = 1000): \Generator
     {
-        return null;
+        $page = 0;
+        while (true) {
+            $rows = $this->skip($page * $chunkSize)->take($chunkSize)->get();
+            if (empty($rows)) break;
+            foreach ($rows as $row) yield $row;
+            $page++;
+        }
     }
     /**
      * max
      */
-    public function max(string $column)
+    public function max(string $column): mixed
     {
-        return null;
+        [$sql, $bindings] = $this->compileAggregate("MAX", $column);
+        $row = $this->connection->selectOne($sql, $bindings);
+        return $row["aggregate"] ?? null;
     }
     /**
      * min
      */
-    public function min(string $column)
+    public function min(string $column): mixed
     {
-        return null;
+        [$sql, $bindings] = $this->compileAggregate("MIN", $column);
+        $row = $this->connection->selectOne($sql, $bindings);
+        return $row["aggregate"] ?? null;
     }
     /**
      * paginate
      */
-    public function paginate()
+    public function paginate(int $perPage = 15, int $page = 1): array
     {
-        return null;
+        $total = $this->count();
+        $items = $this->skip(($page - 1) * $perPage)->take($perPage)->get();
+        return [
+            "data" => $items,
+            "total" => $total,
+            "per_page" => $perPage,
+            "current_page" => $page,
+            "last_page" => (int) ceil($total / max(1, $perPage)),
+        ];
     }
     /**
      * pluck
      */
-    public function pluck(string $column, ?string $key = null)
+    public function pluck(string $column, ?string $key = null): array
     {
-        return null;
+        $rows = $this->get();
+        $result = [];
+        foreach ($rows as $row) {
+            $val = $row[$column] ?? null;
+            if ($key !== null && isset($row[$key])) {
+                $result[$row[$key]] = $val;
+            } else {
+                $result[] = $val;
+            }
+        }
+        return $result;
     }
     /**
      * rightJoin
      */
-    public function rightJoin()
+    public function rightJoin(string $table, string $local, string $operator, string $foreign): self
     {
-        return null;
+        $this->joinClauses[] = ["table" => $table, "type" => "RIGHT", "local" => $local, "foreign" => $foreign, "operator" => $operator];
+        return $this;
     }
     /**
      * selectRaw
      */
-    public function selectRaw()
+    public function selectRaw(string $expression): self
     {
-        return null;
+        $this->columns[] = $expression;
+        return $this;
     }
     /**
      * sharedLock
@@ -393,9 +436,11 @@ final class QueryBuilder
     /**
      * sum
      */
-    public function sum(string $column)
+    public function sum(string $column): float
     {
-        return null;
+        [$sql, $bindings] = $this->compileAggregate("SUM", $column);
+        $row = $this->connection->selectOne($sql, $bindings);
+        return (float) ($row["aggregate"] ?? 0);
     }
     /**
      * truncate
@@ -407,44 +452,56 @@ final class QueryBuilder
     /**
      * union
      */
-    public function union()
+    public function union(self $query): self
     {
-        return null;
+        $this->unions[] = $query;
+        return $this;
     }
     /**
      * upsert
      */
-    public function upsert()
+    public function upsert(array $values, array $uniqueBy, array $update = null): int
     {
-        return null;
+        $columns = array_keys($values);
+        $placeholders = array_fill(0, count($columns), "?");
+        $sql = "INSERT INTO {$this->table} (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        $updateCols = $update ?? array_diff($columns, $uniqueBy);
+        $sets = array_map(fn($c) => "$c = excluded.$c", $updateCols);
+        if (!empty($sets)) {
+            $sql .= " ON CONFLICT (" . implode(", ", $uniqueBy) . ") DO UPDATE SET " . implode(", ", $sets);
+        }
+        return $this->connection->update($sql, array_values($values));
     }
     /**
      * value
      */
-    public function value()
+    public function value(string $column): mixed
     {
-        return null;
+        $row = $this->first();
+        return $row[$column] ?? null;
     }
     /**
      * whereBetween
      */
-    public function whereBetween()
+    public function whereBetween(string $column, array $values): self
     {
-        return null;
+        $this->wheres[] = ["column" => $column, "operator" => "BETWEEN", "value" => $values, "boolean" => "AND"];
+        return $this;
     }
     /**
      * whereExists
      */
-    public function whereExists()
+    public function whereExists(callable $callback): self
     {
-        return null;
+        return $this;
     }
     /**
      * whereRaw
      */
-    public function whereRaw()
+    public function whereRaw(string $sql, array $bindings = []): self
     {
-        return null;
+        $this->wheres[] = ["column" => $sql, "operator" => "RAW", "value" => $bindings, "boolean" => "AND"];
+        return $this;
     }
     /**
      * withCte
