@@ -255,8 +255,7 @@ final class QueryBuilder
      */
     public function chunk(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        $results = $this->skip(0)->take($count)->get(); while (count($results) > 0) { foreach ($results as $r) $callback($r); $results = $this->skip(0)->take($count)->get(); } return true;
     }
     /**
      * crossJoin
@@ -270,8 +269,7 @@ final class QueryBuilder
      */
     public function cursor(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return $this->get();
     }
     /**
      * decrement

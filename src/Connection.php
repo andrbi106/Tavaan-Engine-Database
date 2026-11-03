@@ -218,8 +218,7 @@ final class Connection
      */
     public function cursor(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return $this->get();
     }
     /**
      * lastInsertId
