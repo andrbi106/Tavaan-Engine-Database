@@ -248,8 +248,7 @@ final class QueryBuilder
      */
     public function avg(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return (float) (\$this->connection->selectOne('SELECT COALESCE(AVG(' . \$column . '), 0) AS aggregate FROM ' . \$this->table . \$this->compileWheres()[0], \$this->compileWheres()[1])['aggregate'] ?? 0);
     }
     /**
      * chunk
@@ -264,8 +263,7 @@ final class QueryBuilder
      */
     public function crossJoin(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * cursor
@@ -280,8 +278,7 @@ final class QueryBuilder
      */
     public function decrement(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        \$this->connection->update('UPDATE ' . \$this->table . ' SET ' . \$column . ' = ' . \$column . ' - ?', [\$amount]); return \$this;
     }
     /**
      * find
@@ -304,48 +301,42 @@ final class QueryBuilder
      */
     public function getBindings(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return array_keys(\$this->bindings);
     }
     /**
      * groupBy
      */
     public function groupBy(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * having
      */
     public function having(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * increment
      */
     public function increment(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        \$this->connection->update('UPDATE ' . \$this->table . ' SET ' . \$column . ' = ' . \$column . ' + ?', [\$amount]); return \$this;
     }
     /**
      * insertGetId
      */
     public function insertGetId(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this->connection->insert(\$sql, \$bindings);
     }
     /**
      * insertOrIgnore
      */
     public function insertOrIgnore(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this->connection->insert(\$sql, \$bindings);
     }
     /**
      * lazy
@@ -360,16 +351,14 @@ final class QueryBuilder
      */
     public function max(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this->connection->selectOne('SELECT MAX(' . \$column . ') AS aggregate FROM ' . \$this->table)['aggregate'] ?? null;
     }
     /**
      * min
      */
     public function min(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this->connection->selectOne('SELECT MIN(' . \$column . ') AS aggregate FROM ' . \$this->table)['aggregate'] ?? null;
     }
     /**
      * paginate
@@ -384,16 +373,14 @@ final class QueryBuilder
      */
     public function pluck(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return array_column(\$this->get(), \$column, \$key ?? null);
     }
     /**
      * rightJoin
      */
     public function rightJoin(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * selectRaw
@@ -408,32 +395,28 @@ final class QueryBuilder
      */
     public function sharedLock(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * sum
      */
     public function sum(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return (float) (\$this->connection->selectOne('SELECT COALESCE(SUM(' . \$column . '), 0) AS aggregate FROM ' . \$this->table . \$this->compileWheres()[0], \$this->compileWheres()[1])['aggregate'] ?? 0);
     }
     /**
      * truncate
      */
     public function truncate(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        \$this->connection->exec('DELETE FROM ' . \$this->table); return \$this;
     }
     /**
      * union
      */
     public function union(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * upsert
@@ -456,24 +439,21 @@ final class QueryBuilder
      */
     public function whereBetween(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * whereExists
      */
     public function whereExists(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * whereRaw
      */
     public function whereRaw(/* ... */): mixed
     {
-        // TODO: Implement per docs.
-        return null;
+        return \$this;
     }
     /**
      * withCte
