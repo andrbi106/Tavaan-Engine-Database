@@ -218,6 +218,13 @@ final class QueryBuilder
     /**
      * @return array{0: string, 1: list<mixed>}
      */
+    private function compileAggregate(string $function, string $column): array
+    {
+        [$whereSql, $whereBindings] = $this->compileWheres();
+        $sql = "SELECT {$function}({$column}) AS aggregate FROM {$this->table}" . $whereSql;
+        return [$sql, $whereBindings];
+    }
+
     private function compileWheres(): array
     {
         if (empty($this->wheres)) return ['', []];
@@ -460,7 +467,7 @@ final class QueryBuilder
     /**
      * upsert
      */
-    public function upsert(array $values, array $uniqueBy, array $update = null): int
+    public function upsert(array $values, array $uniqueBy, ?array $update = null): int
     {
         $columns = array_keys($values);
         $placeholders = array_fill(0, count($columns), "?");
