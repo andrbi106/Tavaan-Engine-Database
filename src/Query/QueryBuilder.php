@@ -248,7 +248,7 @@ final class QueryBuilder
      */
     public function avg(/* ... */): mixed
     {
-        return (float) (\$this->connection->selectOne('SELECT COALESCE(AVG(' . \$column . '), 0) AS aggregate FROM ' . \$this->table . \$this->compileWheres()[0], \$this->compileWheres()[1])['aggregate'] ?? 0);
+        return (float) ($this->connection->selectOne('SELECT COALESCE(AVG(' . $column . '), 0) AS aggregate FROM ' . $this->table . $this->compileWheres()[0], $this->compileWheres()[1])['aggregate'] ?? 0);
     }
     /**
      * chunk
@@ -263,7 +263,7 @@ final class QueryBuilder
      */
     public function crossJoin(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * cursor
@@ -278,7 +278,7 @@ final class QueryBuilder
      */
     public function decrement(/* ... */): mixed
     {
-        \$this->connection->update('UPDATE ' . \$this->table . ' SET ' . \$column . ' = ' . \$column . ' - ?', [\$amount]); return \$this;
+        $this->connection->update('UPDATE ' . $this->table . ' SET ' . $column . ' = ' . $column . ' - ?', [$amount]); return $this;
     }
     /**
      * find
@@ -301,42 +301,42 @@ final class QueryBuilder
      */
     public function getBindings(/* ... */): mixed
     {
-        return array_keys(\$this->bindings);
+        return array_keys($this->bindings);
     }
     /**
      * groupBy
      */
     public function groupBy(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * having
      */
     public function having(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * increment
      */
     public function increment(/* ... */): mixed
     {
-        \$this->connection->update('UPDATE ' . \$this->table . ' SET ' . \$column . ' = ' . \$column . ' + ?', [\$amount]); return \$this;
+        $this->connection->update('UPDATE ' . $this->table . ' SET ' . $column . ' = ' . $column . ' + ?', [$amount]); return $this;
     }
     /**
      * insertGetId
      */
     public function insertGetId(/* ... */): mixed
     {
-        return \$this->connection->insert(\$sql, \$bindings);
+        return $this->connection->insert($sql, $bindings);
     }
     /**
      * insertOrIgnore
      */
     public function insertOrIgnore(/* ... */): mixed
     {
-        return \$this->connection->insert(\$sql, \$bindings);
+        return $this->connection->insert($sql, $bindings);
     }
     /**
      * lazy
@@ -351,14 +351,14 @@ final class QueryBuilder
      */
     public function max(/* ... */): mixed
     {
-        return \$this->connection->selectOne('SELECT MAX(' . \$column . ') AS aggregate FROM ' . \$this->table)['aggregate'] ?? null;
+        return $this->connection->selectOne('SELECT MAX(' . $column . ') AS aggregate FROM ' . $this->table)['aggregate'] ?? null;
     }
     /**
      * min
      */
     public function min(/* ... */): mixed
     {
-        return \$this->connection->selectOne('SELECT MIN(' . \$column . ') AS aggregate FROM ' . \$this->table)['aggregate'] ?? null;
+        return $this->connection->selectOne('SELECT MIN(' . $column . ') AS aggregate FROM ' . $this->table)['aggregate'] ?? null;
     }
     /**
      * paginate
@@ -373,14 +373,14 @@ final class QueryBuilder
      */
     public function pluck(/* ... */): mixed
     {
-        return array_column(\$this->get(), \$column, \$key ?? null);
+        return array_column($this->get(), $column, $key ?? null);
     }
     /**
      * rightJoin
      */
     public function rightJoin(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * selectRaw
@@ -395,28 +395,28 @@ final class QueryBuilder
      */
     public function sharedLock(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * sum
      */
     public function sum(/* ... */): mixed
     {
-        return (float) (\$this->connection->selectOne('SELECT COALESCE(SUM(' . \$column . '), 0) AS aggregate FROM ' . \$this->table . \$this->compileWheres()[0], \$this->compileWheres()[1])['aggregate'] ?? 0);
+        return (float) ($this->connection->selectOne('SELECT COALESCE(SUM(' . $column . '), 0) AS aggregate FROM ' . $this->table . $this->compileWheres()[0], $this->compileWheres()[1])['aggregate'] ?? 0);
     }
     /**
      * truncate
      */
     public function truncate(/* ... */): mixed
     {
-        \$this->connection->exec('DELETE FROM ' . \$this->table); return \$this;
+        $this->connection->exec('DELETE FROM ' . $this->table); return $this;
     }
     /**
      * union
      */
     public function union(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * upsert
@@ -439,21 +439,21 @@ final class QueryBuilder
      */
     public function whereBetween(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * whereExists
      */
     public function whereExists(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * whereRaw
      */
     public function whereRaw(/* ... */): mixed
     {
-        return \$this;
+        return $this;
     }
     /**
      * withCte
