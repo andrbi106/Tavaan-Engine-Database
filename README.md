@@ -2,6 +2,8 @@
 
 > **دیتابیس** — موتور Database در فریمورک تَوان
 
+این موتور از کلاس پایهٔ `Engine` (در [Tavaan-Engine-Core](https://github.com/andrbi106/Tavaan-Engine-Core)) ارث می‌برد.
+
 ## مشخصات
 
 | فیلد | مقدار |
@@ -11,94 +13,60 @@
 | عنوان فارسی | دیتابیس |
 | نسخه | `0.1.0` |
 | namespace | `Tavaan\Engine\Database` |
-| نوع | `engine` |
-| Facade | `DB` (accessor: `db`) |
+| کلاس موتور | `Tavaan\Engine\Database\DatabaseEngine` |
+| Facade | DB (`db`) |
 
-## قراردادها (Contracts)
+## کلاس موتور
 
-این موتور قراردادهای زیر را ارائه می‌دهد:
+```php
+namespace Tavaan\Engine\Database;
 
-- `Tavaan\Engine\Database\Contracts\ConnectionInterface`
-- `Tavaan\Engine\Database\Contracts\GrammarInterface`
-- `Tavaan\Engine\Database\Contracts\MigrationInterface`
-- `Tavaan\Engine\Database\Contracts\PaginatorInterface`
-- `Tavaan\Engine\Database\Contracts\QueryBuilderInterface`
-- `Tavaan\Engine\Database\Contracts\SchemaBuilderInterface`
-- `Tavaan\Engine\Database\Contracts\TransactionManagerInterface`
+use Tavaan\EngineCore\Engine as BaseEngine;
+use Tavaan\EngineCore\Contracts\EngineManifestInterface;
 
-## خطاها (Exceptions)
+final class DatabaseEngine extends BaseEngine
+{
+    public function __construct(EngineManifestInterface $manifest)
+    {
+        parent::__construct($manifest);
+    }
 
-- `Tavaan\Engine\Database\Exceptions\ConnectionException`
-- `Tavaan\Engine\Database\Exceptions\DatabaseException`
-- `Tavaan\Engine\Database\Exceptions\DeadlockException`
-- `Tavaan\Engine\Database\Exceptions\MixedBindingException`
-- `Tavaan\Engine\Database\Exceptions\QueryException`
-- `Tavaan\Engine\Database\Exceptions\RecordNotFoundException`
-- `Tavaan\Engine\Database\Exceptions\UnsafeQueryException`
+    public function register(ContainerInterface $container): void
+    {
+        parent::register($container);
+        // bindingهای اختصاصی موتور
+    }
 
-## Facadeها
+    public function boot(): void
+    {
+        parent::boot();
+    }
+}
+```
 
-- `Tavaan\Engine\Database\Facades\DB`
-- `Tavaan\Engine\Database\Facades\Schema`
+**فایل:** `src/DatabaseEngine.php`
 
-## کلاس‌های اصلی
+## وابستگی‌ها
 
-- `src/Connection.php`
-- `src/ConnectionManager.php`
-- `src/Connections/MySqlConnection.php`
-- `src/Connections/PostgresConnection.php`
-- `src/Connections/SqliteConnection.php`
-- `src/DatabaseServiceProvider.php`
-- `src/Expression.php`
-- `src/Grammars/Grammar.php`
-- `src/Grammars/MySqlGrammar.php`
-- `src/Grammars/PostgresGrammar.php`
-- `src/Grammars/SqliteGrammar.php`
-- `src/Migration/Exceptions/MigrationException.php`
-- `src/Migration/Exceptions/MigrationLockedException.php`
-- `src/Migration/FileMigrationLock.php`
-- `src/Migration/MigrateResult.php`
-- `src/Migration/Migration.php`
-- `src/Migration/MigrationRepository.php`
-- `src/Migration/MigrationServiceProvider.php`
-- `src/Migration/Migrator.php`
-- `src/ORM/Casts/CastHandler.php`
-- ... و 56 فایل دیگر
+**موتورهای مورد‌نیاز:** `config`, `event`, `log`
 
 ## Service Providerها
 
 - `Tavaan\Engine\Database\DatabaseServiceProvider`
 
-## وابستگی‌ها
+## سه درگاه ارتباط با سایر موتورها
 
-**موتورهای مورد‌نیاز:**
-
-- `config`
-- `event`
-- `log`
-
-## پیکربندی
-
-- فایل پیکربندی: `config/database.php`
-- کلید: `database`
+| درگاه | الگو | متدهای convenience |
+|---|---|---|
+| Container | pull-based DI | `make()`, `bound()` |
+| Events | pub/sub | `dispatch()`, `listen()` |
+| EngineBus | point-to-point RPC | `call()`, `offer()` |
 
 ## نصب
 
 ```bash
 git clone https://github.com/andrbi106/Tavaan-Engine-Database.git
 ```
-
-این موتور بخشی از فریمورک تَوان است و معمولاً به‌صورت مستقیم نصب نمی‌شود،
-بلکه توسط [Tavaan-Core](https://github.com/andrbi106/Tavaan-Core) مدیریت می‌شود.
-
-## روابط با سایر مخازن
-
-| مخزن | نقش |
-|---|---|
-| **`andrbi106/Tavaan-Engine-Database`** (این مخزن) | موتور Database |
-| `andrbi106/Tavaan-Engine-Core` | ساختار پایه + درگاه ارتباط موتورها |
-| `andrbi106/Tavaan-Core` | اسکلت اپلیکیشن + همهٔ موتورها |
-| `Derogaramin/Tavaan-Framework` | فریمورک مادر (monorepo) |
 
 ## مجوز
 

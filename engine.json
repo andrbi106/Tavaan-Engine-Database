@@ -15,8 +15,14 @@
   ],
   "requires": {
     "php": ">=8.2",
-    "engines": ["config", "event", "log"],
-    "extensions": ["pdo"]
+    "engines": [
+      "config",
+      "event",
+      "log"
+    ],
+    "extensions": [
+      "pdo"
+    ]
   },
   "config": {
     "file": "config/database.php",
@@ -28,5 +34,6 @@
     "name": "DB",
     "accessor": "db"
   },
-  "docs": "docs/03-engines/database.md"
+  "docs": "docs/03-engines/database.md",
+  "class": "Tavaan\\Engine\\Database\\DatabaseEngine"
 }
