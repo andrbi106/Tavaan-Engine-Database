@@ -10,8 +10,8 @@ use Tavaan\Core\Facade\Facade;
  * Facade دیتابیس (DB).
  *
  * @method static \Tavaan\Engine\Database\Connection connection(?string $name = null)
- * @method static \Tavaan\Engine\Database\QueryBuilder table(string $table, ?string $as = null)
- * @method static \Tavaan\Engine\Database\QueryBuilder query()
+ * @method static \Tavaan\Engine\Database\Query\QueryBuilder table(string $table, ?string $as = null)
+ * @method static \Tavaan\Engine\Database\Query\QueryBuilder query()
  * @method static \Tavaan\Engine\Database\Expression raw(string $value, array $bindings = [])
  * @method static array select(string $sql, array $bindings = [])
  * @method static bool statement(string $sql, array $bindings = [])

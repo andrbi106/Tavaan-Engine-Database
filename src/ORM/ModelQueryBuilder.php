@@ -7,7 +7,7 @@ namespace Tavaan\Engine\Database\ORM;
 use Tavaan\Engine\Database\Contracts\PaginatorInterface;
 use Tavaan\Engine\Database\Exceptions\RecordNotFoundException;
 use Tavaan\Engine\Database\Pagination\Paginator;
-use Tavaan\Engine\Database\QueryBuilder;
+use Tavaan\Engine\Database\Query\QueryBuilder;
 
 /**
  * تَوان | Tavaan — ORM

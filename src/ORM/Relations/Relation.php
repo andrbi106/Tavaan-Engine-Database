@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tavaan\Engine\Database\ORM\Relations;
 
 use Tavaan\Engine\Database\ORM\Model;
-use Tavaan\Engine\Database\QueryBuilder;
+use Tavaan\Engine\Database\Query\QueryBuilder;
 
 /**
  * تَوان | Tavaan — ORM

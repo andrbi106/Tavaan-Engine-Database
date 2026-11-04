@@ -21,7 +21,7 @@ use Tavaan\Engine\Database\ORM\Relations\MorphOne;
 use Tavaan\Engine\Database\ORM\Relations\MorphTo;
 use Tavaan\Engine\Database\ORM\Relations\MorphToMany;
 use Tavaan\Engine\Database\ORM\Relations\Relation;
-use Tavaan\Engine\Database\QueryBuilder;
+use Tavaan\Engine\Database\Query\QueryBuilder;
 use Tavaan\Support\Time\Clock;
 use Tavaan\Support\Ulid;
 
